@@ -28,22 +28,31 @@ public class MinesweeperGame {
         initalizeGame();
 
         while (true) {
-            showBard();
+            try {
 
-            if (doesUserWinTheGame()) {
-                System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
-                break;
+
+                showBard();
+
+                if (doesUserWinTheGame()) {
+                    System.out.println("지뢰를 모두 찾았습니다. GAME CLEAR!");
+                    break;
+                }
+                if (doesUserLoseTheGame()) {
+                    System.out.println("지뢰를 밟았습니다. GAME OVER!");
+                    break;
+                }
+
+                System.out.println();
+                String cellInput = getCellInputFromUser();
+                String userActionInput = getUserActionInputFromUser();
+
+
+                actOnCell(cellInput, userActionInput);
+            } catch (AppException e) {
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("프로그램에 문제 생김");
             }
-            if (doesUserLoseTheGame()) {
-                System.out.println("지뢰를 밟았습니다. GAME OVER!");
-                break;
-            }
-
-            System.out.println();
-            String cellInput = getCellInputFromUser();
-            String userActionInput = getUserActionInputFromUser();
-
-            actOnCell(cellInput, userActionInput);
         }
     }
 
@@ -70,7 +79,7 @@ public class MinesweeperGame {
             checkIfGameIsOver();
             return;
         }
-        System.out.println("잘못된 번호를 선택하셨습니다.");
+        throw new AppException("잘못된 번호를 선택하셨습니다.");
 
     }
 
@@ -149,12 +158,19 @@ public class MinesweeperGame {
 
          return Arrays.stream(BOARD)
                  .flatMap(Arrays::stream) //평면화
-                 .noneMatch(cell -> cell.equals(CLOSED_CELL_SIGN));
+                 .noneMatch(CLOSED_CELL_SIGN::equals);
+         // CLOSED_CELL_SIGN은 이미 상수여서 NPE가 발생 X
      }
 
 
+
+     //alt +f8 디버그 : 실제 값 어떻게 됨?
     private static int convertRowFrom(char cellInputRow) {
-        return Character.getNumericValue(cellInputRow) - 1;
+        int rowIndex = Character.getNumericValue(cellInputRow) - 1;
+        if (rowIndex >= BOARD_ROW_SIZE) {
+            throw new AppException("잘못된 입력입니다.");
+        }
+        return rowIndex;
     }
 
     private static int convertColFrom(char cellInputCol) {
@@ -180,7 +196,7 @@ public class MinesweeperGame {
             case 'j':
                 return 9;
             default:
-                return -1;
+                throw new AppException("잘못된 입력입니다.");
         }
     }
 
