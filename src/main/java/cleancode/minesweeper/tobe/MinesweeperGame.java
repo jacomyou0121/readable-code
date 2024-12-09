@@ -128,17 +128,17 @@ public class MinesweeperGame {
         gameStatus = 1;
     }
 
-     private static boolean isAllCellOpened2() {
-        boolean isAllOpened = true;
-        for (int row = 0; row < BOARD_ROW_SIZE; row++) { //3중 배열
-            for (int col = 0; col < BOARD_COL_SIZE; col++) {
-                if (BOARD[row][col].isClosed()) {
-                    isAllOpened = false;
-                }
-            }
-        }
-        return isAllOpened;
-    }
+//     private static boolean isAllCellOpened2() {
+//        boolean isAllOpened = true;
+//        for (int row = 0; row < BOARD_ROW_SIZE; row++) { //3중 배열
+//            for (int col = 0; col < BOARD_COL_SIZE; col++) {
+//                if (BOARD[row][col].isClosed()) {
+//                    isAllOpened = false;
+//                }
+//            }
+//        }
+//        return isAllOpened;
+//    }
 
 
      //리펙토링 현명하게 하기
