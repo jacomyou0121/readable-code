@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 //모든 게임로직 여기다 둠
 //입출력 로직 분리
-public class Minesweeper {
+public class Minesweeper implements Game {
     //공백라인 : 후손에게 이런 의미 구간으로 읽어라
 
     //상수에 사이즈 고정 으로 확장에 닫혀 있는 상황 -인터페이스로 활용
@@ -29,10 +29,14 @@ public class Minesweeper {
         gameBoard = new GameBoard(gameLevel);
     }
 
+    @Override
+    public void initialize() {
+        gameBoard.initalizeGame();
+    }
+
+    @Override
     public void run() {
         consoleOutputHandler.showGameStartComments();
-        gameBoard.initalizeGame();
-
         while (true) {
             try {
                 consoleOutputHandler.showBoard(gameBoard);
