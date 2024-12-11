@@ -1,14 +1,26 @@
 package cleancode.minesweeper.tobe;
 
+import cleancode.minesweeper.tobe.gamelevel.GameLevel;
+
 import java.util.Arrays;
 import java.util.Random;
 
 public class GameBoard {
     private  final Cell[][] board;
-    public static final int LAND_MINE_COUNT = 10;
+    private final int landMineCount;
 
-    public GameBoard(int rowSize,int colSize) {
+//    public GameBoard(int rowSize,int colSize) {
+//        board = new Cell[rowSize][colSize];
+//    }
+
+    //런타임 시점에 뭐가 들어올지는 모르지만, 추상화된 스펙은 알고있어 게임을 유동적 실행
+    // 변경에는 닫혀있고, 확장에는 닫혀있는
+    public GameBoard(GameLevel gameLevel) {
+        int rowSize = gameLevel.getRowSize();
+        int colSize = gameLevel.getColSize();
         board = new Cell[rowSize][colSize];
+
+        landMineCount = gameLevel.getLandMineCount();
     }
 
     public void flag(int rowIndex, int colIndex) {
@@ -67,7 +79,7 @@ public class GameBoard {
                board[row][col] = Cell.create();
             }
         }
-        for (int i = 0; i < LAND_MINE_COUNT; i++) {
+        for (int i = 0; i < landMineCount; i++) {
             int landMineCol = new Random().nextInt(colSize);
             int landMineRow = new Random().nextInt(rowSize);
             findCell(landMineRow, landMineCol).turnOnLandMine();
