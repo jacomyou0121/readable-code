@@ -1,12 +1,16 @@
 package cleancode.minesweeper.tobe;
 
+import cleancode.minesweeper.cell.Cell;
+import cleancode.minesweeper.cell.EmptyCell;
+import cleancode.minesweeper.cell.LandMineCell;
+import cleancode.minesweeper.cell.NumberCell;
 import cleancode.minesweeper.tobe.gamelevel.GameLevel;
 
 import java.util.Arrays;
 import java.util.Random;
 
 public class GameBoard {
-    private  final Cell[][] board;
+    private final Cell[][] board;
     private final int landMineCount;
 
 //    public GameBoard(int rowSize,int colSize) {
@@ -76,13 +80,13 @@ public class GameBoard {
         int colSize = getColSize();
         for (int row = 0; row < rowSize; row++) {
             for (int col = 0; col < colSize; col++) {
-               board[row][col] = Cell.create();
+                board[row][col] = new EmptyCell();
             }
         }
         for (int i = 0; i < landMineCount; i++) {
             int landMineCol = new Random().nextInt(colSize);
             int landMineRow = new Random().nextInt(rowSize);
-            findCell(landMineRow, landMineCol).turnOnLandMine();
+            board[landMineRow][landMineCol] = new LandMineCell();
         }
         for (int row = 0; row < rowSize; row++) {
             for (int col = 0; col < colSize; col++) {
@@ -93,10 +97,23 @@ public class GameBoard {
                     continue;
                 }
                 int count = countNearByandMines(row, col);
-                findCell(row, col).updateNearByAndMineCount(count);
+                if (count == 0) {
+                    continue;
+                }
+                board[row][col] = new NumberCell(count);
+
             }
         }
     }
+
+//    public void temp(Cell cell) {
+//        //다른 cell은 예외가 터지게 되어서 이렇게 처리
+//        //LSP위반함으로써 나타나는 단점
+//        if (cell instanceof NumberCell) {
+//            cell.updateNearByAndMineCount(0);
+//        }
+//
+//    }
 
     public String getSize(int rowIndex, int colIndex) {
         Cell cell = findCell(rowIndex, colIndex);
